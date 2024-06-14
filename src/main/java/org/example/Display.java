@@ -1,5 +1,7 @@
 package org.example;
 
+import lombok.Getter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -9,13 +11,14 @@ import java.awt.image.DataBufferByte;
 public class Display extends Canvas {
     private final JFrame mFrame;
     /** The bitmap representing the final image to display */
-    private final Bitmap mFrameBuffer;
+//    private final Bitmap mFrameBitmapBuffer;
+
+            @Getter
+    private final RenderContext mFrameBuffer;
     private final BufferedImage mDisplayImage;
     private final byte[] mDisplayComponents;
     private final BufferStrategy mBufferStrategy;
     private final Graphics mGraphics;
-
-    public Bitmap GetFrameBuffer() { return mFrameBuffer; }
 
     public Display(int width, int height, String title) {
         Dimension size = new Dimension(width, height);
@@ -24,7 +27,7 @@ public class Display extends Canvas {
         setMinimumSize(size);
         setMaximumSize(size);
 
-        mFrameBuffer = new Bitmap(width, height);
+        mFrameBuffer = new RenderContext(width, height);
         mDisplayImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         mDisplayComponents = ((DataBufferByte)mDisplayImage.getRaster().getDataBuffer()).getData();
 
@@ -38,6 +41,7 @@ public class Display extends Canvas {
         mFrame.setResizable(false);
         mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mFrame.setLocationRelativeTo(null);
+        mFrame.setSize(width, height);
         mFrame.setTitle(title);
         mFrame.setVisible(true);
 

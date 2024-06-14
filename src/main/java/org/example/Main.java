@@ -3,7 +3,7 @@ package org.example;
 public class Main {
     public static void main(String[] args) {
         var Display = new Display(800, 600, "Software Rendering");
-        var target = Display.GetFrameBuffer();
+        var target = Display.getMFrameBuffer();
         var stars = new StarField3D(1024, 32.0f, 8.0f);
 
         var previousTime = System.nanoTime();
@@ -17,7 +17,16 @@ public class Main {
             // 다음 반복문이 실행되기 전 현재 시간을 이전 시간 변수 정보에 저장해 이후 재사용한다.
             previousTime = currentTime;
 
-            stars.UpdateRender(target, delta);
+            target.Clear((byte)0x00);
+
+            for(int j = 100; j < 200; j++)
+            {
+                target.InputScanBuffer(j, 300 - j, 300 + j);
+            }
+
+            target.FillShape(100, 200);
+
+//            stars.UpdateRender(target, delta);
             Display.SwapBuffers();
         }
     }

@@ -40,6 +40,7 @@ public class StarField3D {
         // 중심점을 구함
         var halfWidth  = target.GetWidth() / 2.0f;
         var halfHeight = target.GetHeight() / 2.0f;
+        final float tanHalfFOV = (float)Math.tan(Math.toRadians(90.0/2.0));
 
         for (int i = 0; i < mStarPos.length; i++) {
             // 서버 시간과 동일하게 애니메이션을 맞추는 작업을 실행.
@@ -59,8 +60,14 @@ public class StarField3D {
             // 이후 -1 ~ 1까지의 비율로 된 좌표 값에 화면 절반의 길이를 곱함으로써 정확한 좌표를 추적해준다.
             // 그리고 화면의 경우 음수가 아닌 0부터 시작하기 때문에 절반의 너비와 높이를 더해줌으로써 0부터 너비, 높이의 좌표까지로 좌표 값을 설정해준다.
             // 물론 해당 값은 실제 저장값은 아니기에 그릴 때만 사용한다.
-            int x = (int)((mStarPos[i].x / mStarPos[i].z) * halfWidth + halfWidth);
-            int y = (int)((mStarPos[i].y / mStarPos[i].z) * halfHeight + halfHeight);
+//            int x = (int)((mStarPos[i].x / mStarPos[i].z) * halfWidth + halfWidth);
+//            int y = (int)((mStarPos[i].y / mStarPos[i].z) * halfHeight + halfHeight);
+
+            System.out.println("Z Value: " + mStarPos[i].z);
+            System.out.println("Tan Value: " + tanHalfFOV);
+
+            int x = (int)((mStarPos[i].x / (mStarPos[i].z * tanHalfFOV)) * halfWidth + halfWidth);
+            int y = (int)((mStarPos[i].y / (mStarPos[i].z * tanHalfFOV)) * halfHeight + halfHeight);
 
             // 이후 계산한 좌표가 실제 화면에서 벗어날 위치가 되는 경우에는 새로 할당하고 아니라면 새로운 점을 그려준다.
             if(x < 0 || x >= target.GetWidth() ||
