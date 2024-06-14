@@ -63,9 +63,6 @@ public class StarField3D {
 //            int x = (int)((mStarPos[i].x / mStarPos[i].z) * halfWidth + halfWidth);
 //            int y = (int)((mStarPos[i].y / mStarPos[i].z) * halfHeight + halfHeight);
 
-            System.out.println("Z Value: " + mStarPos[i].z);
-            System.out.println("Tan Value: " + tanHalfFOV);
-
             int x = (int)((mStarPos[i].x / (mStarPos[i].z * tanHalfFOV)) * halfWidth + halfWidth);
             int y = (int)((mStarPos[i].y / (mStarPos[i].z * tanHalfFOV)) * halfHeight + halfHeight);
 

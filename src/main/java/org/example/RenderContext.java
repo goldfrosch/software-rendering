@@ -33,4 +33,46 @@ public class RenderContext extends Bitmap {
             }
         }
     }
+
+    public void ScanConvertTriangle(Vertex minYVertex, Vertex midYVertex, Vertex maxYVertex, int handedness) {
+        // 3개의 꼭지점에 각각 하나씩 연동 처리를 진행함.
+        ScanConvertLine(minYVertex, maxYVertex, handedness);
+        ScanConvertLine(minYVertex, midYVertex, 1 - handedness);
+        ScanConvertLine(midYVertex, maxYVertex, 1 - handedness);
+    }
+
+    private void ScanConvertLine(Vertex minYVertex, Vertex maxYVertex, int whichSide) {
+        // 라인 그리는 작업을 수행할 때 필요한 X 좌표와 Y 좌표의 시작과 끝을 가져오는 작업을 수행
+        int yStart = minYVertex.getY();
+        int yEnd  = maxYVertex.getY();
+        int xStart = minYVertex.getX();
+        int xEnd = maxYVertex.getX();
+
+        // 각각의 거리를 계산함 (x, y 좌표의 이동 거리)
+        int yDist = yEnd - yStart;
+        int xDist = xEnd - xStart;
+
+        // y dist 가 0보다 작거나 같다면 굳이 작업을 수행할 이유가 없다.
+        // 각각 더 작은 좌표와 큰 좌표를 받아왔기 때문.
+        // x 좌표는 신경쓰지 않는 거리 계산 방법이기 때문이다.
+        if (yDist <= 0) return;
+
+        // x가 이동할 거리는 x / y로 결정한다.
+        // y가 기본적으로 양수이고 min 과 max 의 결정 기준이 y 좌표 크기인 만큼
+        // y를 기준으로 하여 y 거리에 따라 x 좌표를 찍어주는 처리를 진행한다.
+        // ex. yDist 가 100이고 xDist 가 80이라면 1칸 갈 때 마다 0.8칸 씩 이동한다고 보면 된다.
+        float xStep = (float)xDist / (float)yDist;
+        // 현재 X 좌표 지점은 역시 첫 시작 지점으로 초기화 한다.
+        float curX = (float)xStart;
+
+        for(int j = yStart; j < yEnd; j++)
+        {
+            // mScanBuffer 에 각각의 최대, 최솟값을 더해주는 작업을 수행한다.
+            // whichSide 는 0 아니면 1로 구성되는데 어디가 최소이고 어디가 최대인지를 구분해주는 역할을 한다.
+            // 이후 각 x의 최소, 최대 값을 넣어줌으로써 그림 자체를 그릴 때 유용하게 활용할 수 있게 한다.
+            mScanBuffer[j * 2 + whichSide] = (int)curX;
+            // 이동한 만큼 값을 더해 다음 좌표를 설정한다.
+            curX += xStep;
+        }
+    }
 }

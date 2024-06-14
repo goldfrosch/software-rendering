@@ -11,9 +11,10 @@ import java.awt.image.DataBufferByte;
 public class Display extends Canvas {
     private final JFrame mFrame;
     /** The bitmap representing the final image to display */
-//    private final Bitmap mFrameBitmapBuffer;
+    @Getter
+    private final Bitmap mFrameBitmapBuffer;
 
-            @Getter
+    @Getter
     private final RenderContext mFrameBuffer;
     private final BufferedImage mDisplayImage;
     private final byte[] mDisplayComponents;
@@ -27,6 +28,7 @@ public class Display extends Canvas {
         setMinimumSize(size);
         setMaximumSize(size);
 
+        mFrameBitmapBuffer = new Bitmap(width, height);
         mFrameBuffer = new RenderContext(width, height);
         mDisplayImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         mDisplayComponents = ((DataBufferByte)mDisplayImage.getRaster().getDataBuffer()).getData();
