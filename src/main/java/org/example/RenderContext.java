@@ -1,5 +1,10 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 public class RenderContext extends Bitmap {
     // 각 픽셀의 y좌표 안에 들어갈 x좌표의 최소 좌표와 최대 좌표를 표시
     // y = 0일 때 [0], [1]에는 각 x의 최소와 최대 좌표를 삽입하는 처리를 진행한다.
@@ -15,6 +20,22 @@ public class RenderContext extends Bitmap {
         // 2를 곱하는 것은 하나의 y좌표 기반 배열을 2칸을 활용하기 때문
         mScanBuffer[yCoord * 2] = xMin;
         mScanBuffer[yCoord * 2 + 1] = xMax;
+    }
+
+    public void FillTriangle(Vertex v1, Vertex v2, Vertex v3) {
+        List<Vertex> VertexList = Arrays.asList(v1, v2, v3);
+
+        VertexList.sort(Comparator.comparingInt(Vertex::getY));
+
+        var area = VertexList.get(0).getTriangleArea(VertexList.get(2), VertexList.get(1));
+        // 영역의 크기에 따라 최솟값이 될 지 최대값이 될지 지정해준다.
+        // 사실 boolean 이 더 좋다고 생각은 들지만 일단은... 혹시 몰라 int 로 설정한다.
+        int handedness = area >= 0 ? 1 : 0;
+
+        // 삼각형 스캔으로 각 영역의 위치를 채워주는 작업을 수행한다.
+        ScanConvertTriangle(VertexList.get(0), VertexList.get(1), VertexList.get(2), handedness);
+        // 이후 y 좌표 간의 영역을 그려주는 작업을 수행한다.
+        FillShape(VertexList.get(0).getY(), VertexList.get(2).getY());
     }
 
     public void FillShape(int yMin, int yMax)
